@@ -1,2 +1,2 @@
-# task-manager
+# Task manager
 Personal React project
