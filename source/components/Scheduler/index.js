@@ -7,11 +7,9 @@ import Task from '../Task';
 // Instruments
 import Styles from './styles.m.css';
 import Checkbox from '../../theme/assets/Checkbox';
-import {Spinner} from '../Spinner';
-import {BaseTaskModel} from '../../instruments/helpers';
+import { Spinner } from '../Spinner';
+import { TaskModel } from '../../instruments/helpers';
 import { api } from '../../REST';
-// ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
-
 
 export default class Scheduler extends Component {
     state = {
@@ -49,19 +47,23 @@ export default class Scheduler extends Component {
     _createTaskAsync = async(event) => {
         event.preventDefault();
 
-        this.__setTasksFetchingState(true);
-
         const {newTaskMessage} = this.state;
         if (!newTaskMessage){
             return null;
         }
 
-        const newTask = new BaseTaskModel();
-        newTask.message = newTaskMessage;
+        this.__setTasksFetchingState(true);
 
-        this.setState(({tasks}) => ({
-            tasks:[newTask,...tasks]
-        }));
+
+        const result = await api.createTask(newTaskMessage);
+        if (!!result){
+            const {id, completed, favorite, message, created, modified} = result;
+            const newTask = new TaskModel(id, completed, favorite, message, created, modified);
+
+            this.setState(({tasks}) => ({
+                tasks:[newTask,...tasks]
+            }));
+        }
 
         this.setState({
             newTaskMessage:'',
@@ -83,6 +85,10 @@ export default class Scheduler extends Component {
     }
 
     _updateTaskAsync = async() => {
+        event.preventDefault();
+
+        this.__setTasksFetchingState(true);
+
 
     }
 
@@ -95,7 +101,18 @@ export default class Scheduler extends Component {
     }
 
     render () {
-        const {newTaskMessage, isTasksFetching} = this.state;
+        const {newTaskMessage, isTasksFetching, tasks} = this.state;
+        const tasksJSX = tasks.map((task) => {
+            return (
+                <Task
+                    key = {task.id}
+                    {...task}
+                    _removeTaskAsync = {this._removeTaskAsync}
+                    _updateTaskAsync = {this._updateTaskAsync}
+                />
+            )
+        });
+
         return (
             <section className = { Styles.scheduler }>
                 <Spinner isTasksFetching = {isTasksFetching}/>
@@ -117,8 +134,7 @@ export default class Scheduler extends Component {
                             <button type = 'submit'>Add</button>
                         </form>
                         <ul>
-                            <Task/>
-                            <Task/>
+                            {tasksJSX}
                         </ul>
                     </section>
                     <footer>
