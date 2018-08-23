@@ -98,7 +98,9 @@ export default class Task extends PureComponent {
     }
 
     _toggleTaskCompletedState = () => {
-
+        const {_updateTaskAsync,completed} = this.props;
+        const task = this._getTaskShape({completed:!completed});
+        _updateTaskAsync(task);
     }
 
     _toggleTaskFavoriteState = () => {
@@ -124,7 +126,7 @@ export default class Task extends PureComponent {
                         className = {Styles.toggleTaskCompletedState}
                         color1 = '#3B8EF3'
                         color2 = '#FFF'
-                       // onClick = {this._completeTask}
+                        onClick = {this._toggleTaskCompletedState}
                     />
                     <span>
                         <Remove
