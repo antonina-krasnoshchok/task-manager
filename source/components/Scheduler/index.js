@@ -8,8 +8,8 @@ import Task from '../Task';
 import Styles from './styles.m.css';
 import Checkbox from '../../theme/assets/Checkbox';
 import { Spinner } from '../Spinner';
-import { BaseTaskModel } from '../../instruments/helpers';
 import { api } from '../../REST';
+import { sortTasksByGroup } from '../../instruments/';
 
 export default class Scheduler extends Component {
     state = {
@@ -46,11 +46,13 @@ export default class Scheduler extends Component {
 
         const tasksList = await api.fetchTasks();
         const tasks = tasksList.map(function(task){
-            return {...task, modified:''};
+            if(!!task.modified) return task;
+            else return {...task, modified:''};
         });
 
+        const sortedTasks = sortTasksByGroup(tasks);
         this.setState({
-            tasks,
+            tasks:sortedTasks,
             isTasksFetching:false
         })
     }
@@ -65,9 +67,9 @@ export default class Scheduler extends Component {
 
         this._setTasksFetchingState(true);
 
-        const result = await api.createTask(newTaskMessage);
-        if (!!result){
-            const newTask = {...result,modified:''};
+        const task = await api.createTask(newTaskMessage);
+        if (!!task){
+            const newTask = {...task,modified:''};
             this.setState(({tasks}) => ({
                 tasks:[newTask,...tasks]
             }));
@@ -103,8 +105,9 @@ export default class Scheduler extends Component {
                 return updatedTaskList.find(updatedTesk => updatedTesk.id === task.id) || task
             });
 
+            const sortedTasks = sortTasksByGroup(tasks);
             this.setState({
-                tasks,
+                tasks:sortedTasks,
                 isTasksFetching: false
             });
         }
@@ -142,8 +145,9 @@ export default class Scheduler extends Component {
                     return uncompletedTasks.find(uncompletedTask => uncompletedTask.id === task.id) || task
                 });
 
+                const sortedTasks = sortTasksByGroup(tasks);
                 this.setState({
-                    tasks,
+                    tasks:sortedTasks,
                     isTasksFetching: false
                 });
             }
