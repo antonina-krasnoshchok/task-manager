@@ -57,11 +57,3 @@ export class BaseTaskModel {
         this.message = message;
     }
 }
-
-export class TaskModel extends BaseTaskModel{
-    constructor(id, completed, favorite, message, created = null, modified = null){
-        super(...arguments);
-        this.created = created;
-        this.modified = modified;
-    }
-}

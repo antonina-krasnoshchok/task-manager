@@ -8,7 +8,7 @@ import Task from '../Task';
 import Styles from './styles.m.css';
 import Checkbox from '../../theme/assets/Checkbox';
 import { Spinner } from '../Spinner';
-import { TaskModel } from '../../instruments/helpers';
+import { BaseTaskModel } from '../../instruments/helpers';
 import { api } from '../../REST';
 
 export default class Scheduler extends Component {
@@ -43,8 +43,10 @@ export default class Scheduler extends Component {
     _fetchTasksAsync = async() => {
         this._setTasksFetchingState(true);
 
-        const tasks = await api.fetchTasks();
-        console.log(tasks);
+        const tasksList = await api.fetchTasks();
+        const tasks = tasksList.map(function(task){
+            return {...task, modified:''};
+        });
 
         this.setState({
             tasks,
@@ -62,12 +64,9 @@ export default class Scheduler extends Component {
 
         this._setTasksFetchingState(true);
 
-
         const result = await api.createTask(newTaskMessage);
         if (!!result){
-            const {id, completed, favorite, message, created, modified} = result;
-            const newTask = new TaskModel(id, completed, favorite, message, created, modified);
-
+            const newTask = {...result,modified:''};
             this.setState(({tasks}) => ({
                 tasks:[newTask,...tasks]
             }));
@@ -92,12 +91,22 @@ export default class Scheduler extends Component {
         }
     }
 
-    _updateTaskAsync = async() => {
+    _updateTaskAsync = async(task) => {
         event.preventDefault();
-
         this._setTasksFetchingState(true);
 
+        const updatedTaskList = await api.updateTask(task);
 
+        if (updatedTaskList.length>0){
+            const tasks = this.state.tasks.map(function (task) {
+                return updatedTaskList.find(updatedTesk => updatedTesk.id === task.id) || task
+            });
+
+            this.setState({
+                tasks,
+                isTasksFetching: false
+            });
+        }
     }
 
     _removeTaskAsync = async() => {

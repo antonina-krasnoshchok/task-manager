@@ -34,5 +34,23 @@ export const api = {
         } else {
             return [];
         }
+    },
+
+    updateTask: async(task) => {
+        const response = await fetch(MAIN_URL,{
+            method:'PUT',
+            headers:{
+                'Content-Type':'application/json',
+                Authorization:TOKEN
+            },
+            body: JSON.stringify([task])
+        });
+
+        if (response.status === 200){
+            const {data:taskList} = await response.json();
+            return taskList;
+        } else {
+            return [];
+        }
     }
 };

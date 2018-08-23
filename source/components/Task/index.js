@@ -1,6 +1,6 @@
 // Core
 import React, { PureComponent } from 'react';
-import {func, string, bool} from 'prop-types'
+import {func, string, bool} from 'prop-types';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -15,7 +15,7 @@ export default class Task extends PureComponent {
         completed: bool.isRequired,
         favorite: bool.isRequired,
         created: string.isRequired,
-        //modified: string.isRequired,
+        modified: string.isRequired,
         message: string.isRequired,
         _removeTaskAsync: func.isRequired,
         _updateTaskAsync: func.isRequired
@@ -102,7 +102,9 @@ export default class Task extends PureComponent {
     }
 
     _toggleTaskFavoriteState = () => {
-
+        const {_updateTaskAsync,favorite} = this.props;
+        const task = this._getTaskShape({favorite:!favorite});
+        _updateTaskAsync(task);
     }
 
     _removeTask = () => {
@@ -110,7 +112,8 @@ export default class Task extends PureComponent {
     }
 
     render () {
-        const {completed, message} = this.props;
+        const {completed, message, favorite} = this.props;
+
         return (
             <li className = { Styles.task }>
                 <div className = {Styles.content}>
@@ -132,7 +135,9 @@ export default class Task extends PureComponent {
                 <div className = {Styles.actions}>
                     <Star
                         inlineBlock
+                        checked = {favorite}
                         className = {Styles.toggleTaskFavoriteState}
+                        onClick = {this._toggleTaskFavoriteState}
                     />
                     <Edit
                         inlineBlock
