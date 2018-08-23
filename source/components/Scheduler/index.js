@@ -109,8 +109,18 @@ export default class Scheduler extends Component {
         }
     }
 
-    _removeTaskAsync = async() => {
+    _removeTaskAsync = async(id) => {
+        event.preventDefault();
+        this._setTasksFetchingState(true);
 
+        const result = await api.removeTask(id);
+
+        if (result){
+            this.setState(({tasks}) => ({
+                tasks: tasks.filter((task) => task.id !== id),
+                isTasksFetching:false
+            }));
+        }
     }
 
     _completeAllTasksAsync = async() => {

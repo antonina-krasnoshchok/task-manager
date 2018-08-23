@@ -52,5 +52,23 @@ export const api = {
         } else {
             return [];
         }
+    },
+
+    removeTask: async(id) => {
+        const response = await fetch(`${MAIN_URL}/${id}`,{
+            method:'DELETE',
+            headers:{
+                Authorization:TOKEN
+            }
+        });
+
+        if (response.status === 204){
+           return true
+        } else {
+            return false;
+        }
+
     }
+
+
 };

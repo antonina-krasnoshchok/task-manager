@@ -108,7 +108,8 @@ export default class Task extends PureComponent {
     }
 
     _removeTask = () => {
-
+        const {_removeTaskAsync,id} = this.props;
+        _removeTaskAsync(id);
     }
 
     render () {
@@ -125,7 +126,11 @@ export default class Task extends PureComponent {
                         color2 = '#FFF'
                        // onClick = {this._completeTask}
                     />
-                    <span><Remove/></span>
+                    <span>
+                        <Remove
+                            onClick = {this._removeTask}
+                        />
+                    </span>
                     <input
                         type = 'text'
                         value = {message}
