@@ -1,6 +1,6 @@
 // Core
 import React, { PureComponent } from 'react';
-import {func, string, number, bool} from 'prop-types'
+import {func, string, bool} from 'prop-types'
 
 // Instruments
 import Styles from './styles.m.css';
@@ -14,8 +14,8 @@ export default class Task extends PureComponent {
         id: string.isRequired,
         completed: bool.isRequired,
         favorite: bool.isRequired,
-       // created: number.isRequired,
-     //   modified: number.isRequired,
+        created: string.isRequired,
+        //modified: string.isRequired,
         message: string.isRequired,
         _removeTaskAsync: func.isRequired,
         _updateTaskAsync: func.isRequired

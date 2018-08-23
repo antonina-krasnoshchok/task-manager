@@ -30,18 +30,26 @@ export default class Scheduler extends Component {
         })
     }
 
-    __getAllCompleted = () => {
+    _getAllCompleted = () => {
 
     }
 
-    __setTasksFetchingState = (state) => {
+    _setTasksFetchingState = (state) => {
         this.setState({
             isTasksFetching: state
         })
     }
 
-    __fetchTasksAsync = async() => {
+    _fetchTasksAsync = async() => {
+        this._setTasksFetchingState(true);
 
+        const tasks = await api.fetchTasks();
+        console.log(tasks);
+
+        this.setState({
+            tasks,
+            isTasksFetching:false
+        })
     }
 
     _createTaskAsync = async(event) => {
@@ -52,7 +60,7 @@ export default class Scheduler extends Component {
             return null;
         }
 
-        this.__setTasksFetchingState(true);
+        this._setTasksFetchingState(true);
 
 
         const result = await api.createTask(newTaskMessage);
@@ -87,7 +95,7 @@ export default class Scheduler extends Component {
     _updateTaskAsync = async() => {
         event.preventDefault();
 
-        this.__setTasksFetchingState(true);
+        this._setTasksFetchingState(true);
 
 
     }
@@ -98,6 +106,10 @@ export default class Scheduler extends Component {
 
     _completeAllTasksAsync = async() => {
 
+    }
+
+    componentDidMount(){
+        this._fetchTasksAsync();
     }
 
     render () {

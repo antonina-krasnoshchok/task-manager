@@ -17,5 +17,22 @@ export const api = {
         } else {
             return null;
         }
+    },
+
+    fetchTasks: async() => {
+        const response = await fetch(MAIN_URL,{
+            method:'GET',
+            headers:{
+                'Content-Type':'application/json',
+                Authorization: TOKEN
+            }
+        });
+
+        if (response.status === 200){
+            const {data:tasks} = await response.json();
+            return tasks;
+        } else {
+            return [];
+        }
     }
 };
