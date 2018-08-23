@@ -31,7 +31,8 @@ export default class Scheduler extends Component {
     }
 
     _getAllCompleted = () => {
-
+        const tasks = this.state.tasks;
+        return tasks.every(task => task.completed);
     }
 
     _setTasksFetchingState = (state) => {
@@ -124,7 +125,31 @@ export default class Scheduler extends Component {
     }
 
     _completeAllTasksAsync = async() => {
+        const tasks = this.state.tasks;
 
+        if(!this._getAllCompleted()){
+            this._setTasksFetchingState(true);
+
+            const uncompletedTasks = tasks.filter(function(task){
+                if (!task.completed) {
+                    task.completed = !task.completed;
+                    return task;
+                }
+            });
+            const result = await api.completeAllTasks(uncompletedTasks);
+            if (result){
+                const tasks = this.state.tasks.map(function (task) {
+                    return uncompletedTasks.find(uncompletedTask => uncompletedTask.id === task.id) || task
+                });
+
+                this.setState({
+                    tasks,
+                    isTasksFetching: false
+                });
+            }
+        } else {
+            return null;
+        }
     }
 
     componentDidMount(){
@@ -143,6 +168,7 @@ export default class Scheduler extends Component {
                 />
             )
         });
+        const allTaskCompletedFl = this._getAllCompleted();
 
         return (
             <section className = { Styles.scheduler }>
@@ -172,11 +198,11 @@ export default class Scheduler extends Component {
                         <div>Mark all task as completed</div>
                         <Checkbox
                             inlineBlock
-                            // checked = {completed}
+                            checked = {allTaskCompletedFl}
                             className = {Styles.completeAllTasks}
                             color1 = '#3B8EF3'
                             color2 = '#FFF'
-                            // onClick = {this._completeTask}
+                            onClick = {this._completeAllTasksAsync}
                         />
                     </footer>
                 </main>

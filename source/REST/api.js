@@ -67,8 +67,23 @@ export const api = {
         } else {
             return false;
         }
+    },
 
+    completeAllTasks: async(tasks) => {
+        let requests = tasks.map(function (task) {
+            return fetch(MAIN_URL,{
+                method:'PUT',
+                headers:{
+                    'Content-Type':'application/json',
+                    Authorization:TOKEN
+                },
+                body: JSON.stringify([task])
+            });
+
+        })
+        return Promise.all(requests).then(responses => {
+            const result = responses.every(response => response.status === 200);
+            return result;
+        });
     }
-
-
 };
