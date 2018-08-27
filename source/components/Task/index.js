@@ -135,6 +135,7 @@ export default class Task extends PureComponent {
                     </span>
                     <input
                         type = 'text'
+                        maxLength = '50'
                         value = {message}
                         onChange = {this._updateNewTaskMessage}
                     />

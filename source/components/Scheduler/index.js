@@ -19,15 +19,18 @@ export default class Scheduler extends Component {
         tasks:[]
     };
 
-    _updateTasksFilter = () => {
-
+    _updateTasksFilter = (event) => {
+        const updatedTasksFilter = event.target.value;
+        this.setState({
+            tasksFilter: updatedTasksFilter.toLowerCase()
+        });
     }
 
     _updateNewTaskMessage = (event) => {
         const updatedTaskMessage = event.target.value;
         this.setState({
             newTaskMessage: updatedTaskMessage
-        })
+        });
     }
 
     _getAllCompleted = () => {
@@ -38,7 +41,7 @@ export default class Scheduler extends Component {
     _setTasksFetchingState = (state) => {
         this.setState({
             isTasksFetching: state
-        })
+        });
     }
 
     _fetchTasksAsync = async() => {
@@ -54,7 +57,7 @@ export default class Scheduler extends Component {
         this.setState({
             tasks:sortedTasks,
             isTasksFetching:false
-        })
+        });
     }
 
     _createTaskAsync = async(event) => {
@@ -78,7 +81,7 @@ export default class Scheduler extends Component {
         this.setState({
             newTaskMessage:'',
             isTasksFetching: false
-        })
+        });
     }
 
     _handleFormSubmit = (event) => {
@@ -161,8 +164,9 @@ export default class Scheduler extends Component {
     }
 
     render () {
-        const {newTaskMessage, isTasksFetching, tasks} = this.state;
-        const tasksJSX = tasks.map((task) => {
+        const {newTaskMessage, isTasksFetching, tasks, tasksFilter} = this.state;
+        const filteredTasks = tasks.filter(task => task.message.toLowerCase().indexOf(tasksFilter)!==-1);
+        const tasksJSX = filteredTasks.map((task) => {
             return (
                 <Task
                     key = {task.id}
@@ -180,7 +184,11 @@ export default class Scheduler extends Component {
                 <main>
                     <header>
                         <h1>Task manager</h1>
-                        <input placeholder = {`search task`} />
+                        <input
+                            value = {tasksFilter}
+                            placeholder = {`search task`}
+                            onChange = {this._updateTasksFilter}
+                        />
                     </header>
                     <section>
                         <form onSubmit = {this._handleFormSubmit}>
