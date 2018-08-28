@@ -14,8 +14,6 @@ export default class Task extends PureComponent {
         id: string.isRequired,
         completed: bool.isRequired,
         favorite: bool.isRequired,
-        created: string.isRequired,
-        modified: string.isRequired,
         message: string.isRequired,
         _removeTaskAsync: func.isRequired,
         _updateTaskAsync: func.isRequired
@@ -23,7 +21,7 @@ export default class Task extends PureComponent {
 
     state = {
         isTaskEditing: false,
-        newTaskMessage:this.props.message
+        newMessage:this.props.message
     }
 
     constructor(props) {
@@ -51,10 +49,13 @@ export default class Task extends PureComponent {
     }
 
     _updateTask = () => {
-        const {_updateTaskAsync} = this.props;
-        const {newTaskMessage} = this.state;
-        _updateTaskAsync(this._getTaskShape({message:newTaskMessage}));
+        const {_updateTaskAsync, message} = this.props;
+        const {newMessage} = this.state;
         this._setTaskEditingState(false);
+        if (message === newMessage) {
+            return null;
+        }
+        _updateTaskAsync(this._getTaskShape({message:newMessage}));
     }
 
     _updateTaskMessageOnClick = () => {
@@ -77,20 +78,20 @@ export default class Task extends PureComponent {
     _updateNewTaskMessage = (event) => {
         const updatedTaskMessage = event.target.value;
         this.setState({
-            newTaskMessage: updatedTaskMessage
+            newMessage: updatedTaskMessage
         })
     }
 
     _cancelUpdatingTaskMessage = () => {
         this._setTaskEditingState(false);
         this.setState({
-            newTaskMessage: this.props.message
+            newMessage: this.props.message
         })
     }
 
     _updateTaskMessageOnKeyDown = (event) => {
-        const {newTaskMessage} = this.state;
-        if (!newTaskMessage){
+        const {newMessage} = this.state;
+        if (!newMessage){
             return null;
         }
 
@@ -121,7 +122,7 @@ export default class Task extends PureComponent {
 
     render () {
         const {completed, favorite} = this.props;
-        const {newTaskMessage, isTaskEditing} = this.state;
+        const {newMessage, isTaskEditing} = this.state;
 
         return (
             <li className = { Styles.task }>
@@ -134,17 +135,12 @@ export default class Task extends PureComponent {
                         color2 = '#FFF'
                         onClick = {this._toggleTaskCompletedState}
                     />
-                    <span>
-                        <Remove
-                            onClick = {this._removeTask}
-                        />
-                    </span>
                     <input
                         type = 'text'
-                        maxLength = '50'
+                        maxLength = {50}
                         disabled = {!isTaskEditing}
                         ref = {this.taskInput}
-                        value = {newTaskMessage}
+                        value = {newMessage}
                         onChange = {this._updateNewTaskMessage}
                         onKeyDown = {this._updateTaskMessageOnKeyDown}
                     />
@@ -152,14 +148,28 @@ export default class Task extends PureComponent {
                 <div className = {Styles.actions}>
                     <Star
                         inlineBlock
+                        color1 = '#3B8EF3'
+                        color2 = '#000'
                         checked = {favorite}
                         className = {Styles.toggleTaskFavoriteState}
                         onClick = {this._toggleTaskFavoriteState}
                     />
                     <Edit
                         inlineBlock
+                        checked = {false}
+                        color1 = '#3B8EF3'
+                        color2 = '#000'
                         className = {Styles.updateTaskMessageOnClick}
                         onClick = {this._updateTaskMessageOnClick}
+                    />
+                    <Remove
+                        inlineBlock
+                        color1 = '#3B8EF3'
+                        color2 = '#000'
+                        width = {17}
+                        height = {17}
+                        className = { Styles.removeTask }
+                        onClick = {this._removeTask}
                     />
                 </div>
             </li>

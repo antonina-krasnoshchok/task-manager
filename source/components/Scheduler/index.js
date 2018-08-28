@@ -49,15 +49,16 @@ export default class Scheduler extends Component {
 
         const tasksList = await api.fetchTasks();
         const tasks = tasksList.map(function(task){
-            if(!!task.modified) return task;
+            if(task.modified !== undefined) return task;
             else return {...task, modified:''};
         });
 
         const sortedTasks = sortTasksByGroup(tasks);
+
         this.setState({
-            tasks:sortedTasks,
-            isTasksFetching:false
+            tasks:sortedTasks
         });
+        this._setTasksFetchingState(false);
     }
 
     _createTaskAsync = async(event) => {
@@ -71,7 +72,7 @@ export default class Scheduler extends Component {
         this._setTasksFetchingState(true);
 
         const task = await api.createTask(newTaskMessage);
-        if (!!task){
+        if (task !== null){
             const newTask = {...task,modified:''};
             this.setState(({tasks}) => ({
                 tasks:[newTask,...tasks]
@@ -79,26 +80,23 @@ export default class Scheduler extends Component {
         }
 
         this.setState({
-            newTaskMessage:'',
-            isTasksFetching: false
+            newTaskMessage:''
         });
+        this._setTasksFetchingState(false);
     }
 
     _handleFormSubmit = (event) => {
-        event.preventDefault();
         this._createTaskAsync(event);
     }
 
     _submitOnEnter = (event) => {
         const enterKey = event.key ==='Enter';
         if (enterKey){
-            event.preventDefault();
             this._createTaskAsync(event);
         }
     }
 
     _updateTaskAsync = async(task) => {
-        event.preventDefault();
         this._setTasksFetchingState(true);
 
         const updatedTaskList = await api.updateTask(task);
@@ -110,24 +108,23 @@ export default class Scheduler extends Component {
 
             const sortedTasks = sortTasksByGroup(tasks);
             this.setState({
-                tasks:sortedTasks,
-                isTasksFetching: false
+                tasks:sortedTasks
             });
         }
+        this._setTasksFetchingState(false);
     }
 
     _removeTaskAsync = async(id) => {
-        event.preventDefault();
         this._setTasksFetchingState(true);
 
         const result = await api.removeTask(id);
 
-        if (result){
+        if (result === undefined){
             this.setState(({tasks}) => ({
-                tasks: tasks.filter((task) => task.id !== id),
-                isTasksFetching:false
+                tasks: tasks.filter((task) => task.id !== id)
             }));
         }
+        this._setTasksFetchingState(false);
     }
 
     _completeAllTasksAsync = async() => {
@@ -143,7 +140,7 @@ export default class Scheduler extends Component {
                 }
             });
             const result = await api.completeAllTasks(uncompletedTasks);
-            if (result){
+            if (result === undefined){
                 const tasks = this.state.tasks.map(function (task) {
                     return uncompletedTasks.find(uncompletedTask => uncompletedTask.id === task.id) || task
                 });
@@ -183,39 +180,46 @@ export default class Scheduler extends Component {
                 <Spinner isSpinning = {isTasksFetching}/>
                 <main>
                     <header>
-                        <h1>Task manager</h1>
+                        <h1>Планировщик задач</h1>
                         <input
                             value = {tasksFilter}
-                            placeholder = {`search task`}
+                            placeholder = "Поиск"
+                            type = 'search'
                             onChange = {this._updateTasksFilter}
                         />
                     </header>
                     <section>
                         <form onSubmit = {this._handleFormSubmit}>
                             <input
+                                className = {Styles.createTask}
                                 type = 'text'
-                                placeholder = {`New task description`}
-                                maxLength = '50'
+                                placeholder = 'Описaние моей новой задачи'
+                                maxLength = {50}
                                 value = {newTaskMessage}
                                 onChange = {this._updateNewTaskMessage}
                                 onKeyPress = {this._submitOnEnter}
                             />
-                            <button type = 'submit'>Add</button>
+                            <button>Добавить задачу</button>
                         </form>
-                        <ul>
-                            {tasksJSX}
-                        </ul>
+                        <div className={Styles.overlay}>
+                            <ul>
+                                {tasksJSX}
+                            </ul>
+                        </div>
                     </section>
                     <footer>
-                        <div>Mark all task as completed</div>
-                        <Checkbox
-                            inlineBlock
-                            checked = {allTaskCompletedFl}
-                            className = {Styles.completeAllTasks}
-                            color1 = '#3B8EF3'
-                            color2 = '#FFF'
-                            onClick = {this._completeAllTasksAsync}
-                        />
+                        <span>
+                            <Checkbox
+                                inlineBlock
+                                checked = {allTaskCompletedFl}
+                                color1 = '#363636'
+                                color2 = '#fff'
+                                className = {Styles.completeAllTasks}
+                                className = {Styles.completeAllTasks}
+                                onClick = {this._completeAllTasksAsync}
+                            />
+                            Все задачи выполнены
+                        </span>
                     </footer>
                 </main>
             </section>

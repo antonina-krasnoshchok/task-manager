@@ -63,9 +63,7 @@ export const api = {
         });
 
         if (response.status === 204){
-           return true
-        } else {
-            return false;
+           return undefined;
         }
     },
 
@@ -83,7 +81,7 @@ export const api = {
         })
         return Promise.all(requests).then(responses => {
             const result = responses.every(response => response.status === 200);
-            return result;
+            if (result) return undefined;
         });
     }
 };
