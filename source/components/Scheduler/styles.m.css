@@ -130,6 +130,29 @@
         }
     }
 
+    & .taskInStart {
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    & .taskInEnd {
+      transform: scale(1);
+      transition: opacity 400ms var(--cubic1),
+      transform 400ms var(--cubic1);
+      opacity: 1;
+    }
+
+    & .taskOutStart {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    & .taskOutEnd {
+      transform: scale(0);
+      transition: opacity 400ms var(--cubic2), transform 400ms var(--cubic2);
+      opacity: 0;
+    }
+
     @media (width <= 840px) {
         padding: 7px;
 
@@ -190,11 +213,4 @@
             }
         }
     }
-}
-
-.createTask{
-
-}
-.overlay{
-
 }

@@ -1,5 +1,6 @@
 // Core
 import React, { Component } from 'react';
+import FlipMove from 'react-flip-move';
 
 //components
 import Task from '../Task';
@@ -202,9 +203,9 @@ export default class Scheduler extends Component {
                             <button>Добавить задачу</button>
                         </form>
                         <div className={Styles.overlay}>
-                            <ul>
+                            <FlipMove typeName="ul">
                                 {tasksJSX}
-                            </ul>
+                            </FlipMove>
                         </div>
                     </section>
                     <footer>
