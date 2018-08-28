@@ -28,10 +28,16 @@ export default class Scheduler extends Component {
     }
 
     _updateNewTaskMessage = (event) => {
+        const enterKey = event.key ==='Enter';
+        if (enterKey){
+            this._createTaskAsync(event);
+            return;
+        }
         const updatedTaskMessage = event.target.value;
         this.setState({
             newTaskMessage: updatedTaskMessage
         });
+
     }
 
     _getAllCompleted = () => {
@@ -84,17 +90,6 @@ export default class Scheduler extends Component {
             newTaskMessage:''
         });
         this._setTasksFetchingState(false);
-    }
-
-    _handleFormSubmit = (event) => {
-        this._createTaskAsync(event);
-    }
-
-    _submitOnEnter = (event) => {
-        const enterKey = event.key ==='Enter';
-        if (enterKey){
-            this._createTaskAsync(event);
-        }
     }
 
     _updateTaskAsync = async(task) => {
@@ -190,7 +185,7 @@ export default class Scheduler extends Component {
                         />
                     </header>
                     <section>
-                        <form onSubmit = {this._handleFormSubmit}>
+                        <form onSubmit = {this._createTaskAsync}>
                             <input
                                 className = {Styles.createTask}
                                 type = 'text'
@@ -198,29 +193,25 @@ export default class Scheduler extends Component {
                                 maxLength = {50}
                                 value = {newTaskMessage}
                                 onChange = {this._updateNewTaskMessage}
-                                onKeyPress = {this._submitOnEnter}
                             />
                             <button>Добавить задачу</button>
                         </form>
                         <div className={Styles.overlay}>
-                            <FlipMove typeName="ul">
-                                {tasksJSX}
-                            </FlipMove>
+                            <ul>
+                                <FlipMove duration={400}>
+                                    {tasksJSX}
+                                </FlipMove>
+                            </ul>
                         </div>
                     </section>
                     <footer>
-                        <span>
-                            <Checkbox
-                                inlineBlock
-                                checked = {allTaskCompletedFl}
-                                color1 = '#363636'
-                                color2 = '#fff'
-                                className = {Styles.completeAllTasks}
-                                className = {Styles.completeAllTasks}
-                                onClick = {this._completeAllTasksAsync}
-                            />
-                            Все задачи выполнены
-                        </span>
+                        <Checkbox
+                            checked = {allTaskCompletedFl}
+                            color1 = '#363636'
+                            color2 = '#fff'
+                            onClick = {this._completeAllTasksAsync}
+                        />
+                        <span className = {Styles.completeAllTasks}>Все задачи выполнены</span>
                     </footer>
                 </main>
             </section>
