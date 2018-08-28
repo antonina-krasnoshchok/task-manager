@@ -4,13 +4,22 @@ import {createPortal} from 'react-dom';
 
 // Instruments
 import Styles from './styles.m.css';
+import {bool} from "prop-types";
 
-export const Spinner  = ({isTasksFetching}) =>{
-    const portal = document.getElementById('spinner');
-    return(
-        createPortal(
-            isTasksFetching ? <div className={Styles.spinner} /> : null,
-            portal
+const portal = document.getElementById('spinner');
+
+export default class Spinner extends React{
+    static propTypes = {
+        isSpinning: bool.isRequired,
+    }
+
+    render(){
+        const {isSpinning} = this.props;
+        return(
+            createPortal(
+                isSpinning ? <div className={Styles.spinner} /> : null,
+                portal
+            )
         )
-    )
+    }
 }

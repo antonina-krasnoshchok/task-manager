@@ -7,7 +7,7 @@ import Task from '../Task';
 // Instruments
 import Styles from './styles.m.css';
 import Checkbox from '../../theme/assets/Checkbox';
-import { Spinner } from '../Spinner';
+import Spinner from '../Spinner';
 import { api } from '../../REST';
 import { sortTasksByGroup } from '../../instruments/';
 
@@ -180,7 +180,7 @@ export default class Scheduler extends Component {
 
         return (
             <section className = { Styles.scheduler }>
-                <Spinner isTasksFetching = {isTasksFetching}/>
+                <Spinner isSpinning = {isTasksFetching}/>
                 <main>
                     <header>
                         <h1>Task manager</h1>
