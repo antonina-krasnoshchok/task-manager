@@ -8,7 +8,7 @@ import {bool} from "prop-types";
 export default class Spinner extends Component{
     static propTypes = {
         isSpinning: bool.isRequired,
-    }
+    };
 
     render(){
         const {isSpinning} = this.props;
@@ -16,5 +16,5 @@ export default class Spinner extends Component{
         return (
             isSpinning ? <div className={Styles.spinner} /> : null
         )
-    }
-}
+    };
+};

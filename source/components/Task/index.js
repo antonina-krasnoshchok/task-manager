@@ -17,17 +17,17 @@ export default class Task extends PureComponent {
         message: string.isRequired,
         _removeTaskAsync: func.isRequired,
         _updateTaskAsync: func.isRequired
-    }
+    };
 
     state = {
         isTaskEditing: false,
         newMessage:this.props.message
-    }
+    };
 
     constructor(props) {
         super(props);
         this.taskInput = React.createRef();
-    }
+    };
 
     _getTaskShape = ({
         id = this.props.id,
@@ -46,7 +46,7 @@ export default class Task extends PureComponent {
             isTaskEditing: state
         });
 
-    }
+    };
 
     _updateTask = () => {
         const {_updateTaskAsync, message} = this.props;
@@ -56,7 +56,7 @@ export default class Task extends PureComponent {
             return null;
         }
         _updateTaskAsync(this._getTaskShape({message:newMessage}));
-    }
+    };
 
     _updateTaskMessageOnClick = () => {
         const {isTaskEditing} = this.state;
@@ -66,28 +66,28 @@ export default class Task extends PureComponent {
         } else {
             this._setTaskEditingState(true);
         }
-    }
+    };
 
     componentDidUpdate(){
         const {isTaskEditing} = this.state;
         if(isTaskEditing){
             this.taskInput.current.focus();
         }
-    }
+    };
 
     _updateNewTaskMessage = (event) => {
         const updatedTaskMessage = event.target.value;
         this.setState({
             newMessage: updatedTaskMessage
         })
-    }
+    };
 
     _cancelUpdatingTaskMessage = () => {
         this._setTaskEditingState(false);
         this.setState({
             newMessage: this.props.message
         })
-    }
+    };
 
     _updateTaskMessageOnKeyDown = (event) => {
         const {newMessage} = this.state;
@@ -101,13 +101,13 @@ export default class Task extends PureComponent {
         } else if (pressedKey === 'Enter'){
             this._updateTask();
         }
-    }
+    };
 
     _toggleTaskCompletedState = () => {
         const {_updateTaskAsync,completed} = this.props;
         const task = this._getTaskShape({completed:!completed});
         _updateTaskAsync(task);
-    }
+    };
 
     _toggleTaskFavoriteState = () => {
         const {_updateTaskAsync,favorite} = this.props;
@@ -118,7 +118,7 @@ export default class Task extends PureComponent {
     _removeTask = () => {
         const {_removeTaskAsync,id} = this.props;
         _removeTaskAsync(id);
-    }
+    };
 
     render () {
         const {completed, favorite} = this.props;
@@ -174,5 +174,5 @@ export default class Task extends PureComponent {
                 </div>
             </li>
         );
-    }
-}
+    };
+};

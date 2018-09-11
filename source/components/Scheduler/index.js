@@ -25,7 +25,7 @@ export default class Scheduler extends Component {
         this.setState({
             tasksFilter: updatedTasksFilter.toLowerCase()
         });
-    }
+    };
 
     _updateNewTaskMessage = (event) => {
         const enterKey = event.key ==='Enter';
@@ -38,18 +38,18 @@ export default class Scheduler extends Component {
             newTaskMessage: updatedTaskMessage
         });
 
-    }
+    };
 
     _getAllCompleted = () => {
         const tasks = this.state.tasks;
         return tasks.every(task => task.completed);
-    }
+    };
 
     _setTasksFetchingState = (state) => {
         this.setState({
             isTasksFetching: state
         });
-    }
+    };
 
     _fetchTasksAsync = async() => {
         this._setTasksFetchingState(true);
@@ -66,7 +66,7 @@ export default class Scheduler extends Component {
             tasks:sortedTasks
         });
         this._setTasksFetchingState(false);
-    }
+    };
 
     _createTaskAsync = async(event) => {
         event.preventDefault();
@@ -90,7 +90,7 @@ export default class Scheduler extends Component {
             newTaskMessage:''
         });
         this._setTasksFetchingState(false);
-    }
+    };
 
     _updateTaskAsync = async(task) => {
         this._setTasksFetchingState(true);
@@ -99,7 +99,7 @@ export default class Scheduler extends Component {
 
         if (updatedTaskList.length>0){
             const tasks = this.state.tasks.map(function (task) {
-                return updatedTaskList.find(updatedTesk => updatedTesk.id === task.id) || task
+                return updatedTaskList.find(updatedTesk => updatedTesk.id === task.id) || task;
             });
 
             const sortedTasks = sortTasksByGroup(tasks);
@@ -108,7 +108,7 @@ export default class Scheduler extends Component {
             });
         }
         this._setTasksFetchingState(false);
-    }
+    };
 
     _removeTaskAsync = async(id) => {
         this._setTasksFetchingState(true);
@@ -121,7 +121,7 @@ export default class Scheduler extends Component {
             }));
         }
         this._setTasksFetchingState(false);
-    }
+    };
 
     _completeAllTasksAsync = async() => {
         const tasks = this.state.tasks;
@@ -150,11 +150,11 @@ export default class Scheduler extends Component {
         } else {
             return null;
         }
-    }
+    };
 
     componentDidMount(){
         this._fetchTasksAsync();
-    }
+    };
 
     render () {
         const {newTaskMessage, isTasksFetching, tasks, tasksFilter} = this.state;
@@ -216,5 +216,5 @@ export default class Scheduler extends Component {
                 </main>
             </section>
         );
-    }
-}
+    };
+};

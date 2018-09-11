@@ -36,6 +36,10 @@
                 background-repeat: no-repeat;
                 background-size: 18px 18px;
                 background-position: 95% 50%;
+
+                &:focus{
+                     background-image: none;
+                  }
             }
         }
 
