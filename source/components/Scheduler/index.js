@@ -33,9 +33,9 @@ export default class Scheduler extends Component {
             this._createTaskAsync(event);
             return;
         }
-        const updatedTaskMessage = event.target.value;
+        const newTaskMessage = event.target.value;
         this.setState({
-            newTaskMessage: updatedTaskMessage
+            newTaskMessage
         });
 
     };
@@ -98,7 +98,7 @@ export default class Scheduler extends Component {
         const updatedTaskList = await api.updateTask(task);
 
         if (updatedTaskList.length>0){
-            const tasks = this.state.tasks.map(function (task) {
+            const tasks = this.state.tasks.map((task) => {
                 return updatedTaskList.find(updatedTesk => updatedTesk.id === task.id) || task;
             });
 
@@ -125,8 +125,9 @@ export default class Scheduler extends Component {
 
     _completeAllTasksAsync = async() => {
         const tasks = this.state.tasks;
+        const completedFlag = this._getAllCompleted();
 
-        if(!this._getAllCompleted()){
+        if(!completedFlag){
             this._setTasksFetchingState(true);
 
             const uncompletedTasks = tasks.filter(function(task){
