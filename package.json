@@ -55,7 +55,7 @@
         "enzyme-to-json": "~3.3.4",
         "eslint": "~5.1.0",
         "eslint-plugin-react": "~7.10.0",
-        "favicons-webpack-plugin": "~0.0.9",
+        "favicons-webpack-plugin": "~6.0.0-alpha.1",
         "file-loader": "~1.1.11",
         "gh-pages": "~1.2.0",
         "git-repo-name": "~0.6.0",
